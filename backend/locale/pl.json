@@ -6,6 +6,7 @@
 	"Logik": "Logika",
 	"Systemlogiken": "Logika systemowa",
 	"Nutzerlogiken": "Logika użytkownika",
+	"letzte Ausführung": "",
 	"nächste Ausführung": "Następne wykonanie",
 	"Cycle": "Cykl",
 	"Crontab": "Harmonogram",
@@ -33,8 +34,11 @@
 	"Letzte Änderung": "ostatnia zmiana",
 	"Geändert durch": "zmieniono przez",
 	"age": "czas aktualnej wartości",
+	"update_age": "",
 	"vorheriger Wert": "poprzednia wartość",
+	"previous update": "",
 	"previous change": "poprzednia zmiana",
+	"previous update age": "",
 	"previous age": "czas poprzedniej wartości",
 	
 	"Evaluation und Trigger": "Inicjalizacja, ewaluacja i wyzwalacze",
@@ -194,10 +198,13 @@
 		"enforce_updates": "wymuszone aktualizacje",
 		"eval": "ewaluacja",
 		"eval_trigger": "wyzwalacze ewaluacji",
+		"on_update": "on_update",
+		"on_change": "on_change",
 		"cycle": "cykl",
 		"crontab": "harmonogram",
 		"autotimer": "autotimer",
-		"threshold": "próg"
+		"threshold": "próg",
+		"filename": ""
 	},
 	
 	"_threads": {

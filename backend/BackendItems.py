@@ -44,6 +44,11 @@ import lib.item_conversion
 class BackendItems:
 
 
+    def __init__(self):
+
+        self.logger.debug("BackendItems __init__ {}".format(''))        
+
+
     # -----------------------------------------------------------------------------------
     #    ITEMS
     # -----------------------------------------------------------------------------------
@@ -196,6 +201,44 @@ class BackendItems:
                     hours = hours - 24 * days
         return self.age_to_string(days, hours, minutes, seconds)
 
+
+    def list_to_displaystring(self, l):
+        """
+        """
+        if type(l) is str:
+            return l
+        
+        edit_string = ''
+        for entry in l:
+            if edit_string != '':
+                edit_string += ' | '
+            edit_string += str(entry)
+        if edit_string == '':
+            edit_string = '-'
+#        self.logger.info("list_to_displaystring: >{}<  -->  >{}<".format(l, edit_string))
+        return edit_string
+
+
+    def build_on_list(self, on_dest_list, on_eval_list):
+        """
+        build on_xxx data
+        """
+        on_list = []
+        if on_dest_list is not None:
+            if isinstance(on_dest_list, list):
+                for on_dest, on_eval in zip(on_dest_list, on_eval_list):
+                    if on_dest != '':
+                        on_list.append( on_dest + ' = ' + on_eval )
+                    else:
+                        on_list.append( on_eval )
+            else:
+                if on_dest_list != '':
+                    on_list.append( on_dest_list + ' = ' + on_eval_list )
+                else:
+                    on_list.append( on_eval_list )
+        return on_list
+
+
     @cherrypy.expose
     def item_detail_json_html(self, item_path):
         """
@@ -227,15 +270,28 @@ class BackendItems:
                     if self._sh.scheduler._scheduler[entry]['cron']:
                         crontab = html.escape(str(self._sh.scheduler._scheduler[entry]['cron']))
                     break
+            if cycle == '':
+                cycle = '-'
+            if crontab == '':
+                crontab = '-'
 
             changed_by = item.changed_by()
             if changed_by[-5:] == ':None':
                 changed_by = changed_by[:-5]
 
+            updated_by = item.updated_by()
+            if updated_by[-5:] == ':None':
+                updated_by = updated_by[:-5]
+
             if item.prev_age() < 0:
                 prev_age = ''
             else:
-                prev_age = self.disp_age(item.prev_age())
+                prev_age = self.disp_age(item.prev_update_age())
+            if item.prev_update_age() < 0:
+                prev_update_age = ''
+            else:
+                prev_update_age = self.disp_age(item.prev_update_age())
+
             if str(item._cache) == 'False':
                 cache = 'off'
             else:
@@ -258,23 +314,37 @@ class BackendItems:
                 trig = trig[1:len(trig) - 27]
                 triggers.append(html.escape(format(trig.replace("<", ""))))
 
+            try:
+                upd_age = item.update_age()
+            except:
+                # if used lib.items doesn't support update_age() function
+                upd_age = item.age()
+            
+            # build on_update and on_change data
+            on_update_list = self.build_on_list(item._on_update_dest_var, item._on_update)
+            on_change_list = self.build_on_list(item._on_change_dest_var, item._on_change)
+            
             data_dict = {'path': item._path,
                          'name': item._name,
                          'type': item.type(),
                          'value': value,
                          'age': self.disp_age(item.age()),
+                         'update_age': self.disp_age(item.update_age()),
                          'last_update': str(item.last_update()),
                          'last_change': str(item.last_change()),
                          'changed_by': changed_by,
+                         'updated_by': updated_by,
                          'previous_value': prev_value,
                          'previous_age': prev_age,
+                         'previous_update_age': prev_update_age,
+                         'previous_update': str(item.prev_update()),
                          'previous_change': str(item.prev_change()),
                          'enforce_updates': enforce_updates,
                          'cache': cache,
                          'eval': html.escape(self.disp_str(item._eval)),
                          'eval_trigger': self.disp_str(item._eval_trigger),
-                         'on_update': html.escape(self.disp_str(item._on_update)),
-                         'on_change': html.escape(self.disp_str(item._on_change)),
+                         'on_update': html.escape(self.list_to_displaystring(on_update_list)),
+                         'on_change': html.escape(self.list_to_displaystring(on_change_list)),
                          'cycle': str(cycle),
                          'crontab': str(crontab),
                          'autotimer': self.disp_str(item._autotimer),
@@ -282,6 +352,7 @@ class BackendItems:
                          'config': json.dumps(item_conf_sorted),
                          'logics': json.dumps(logics),
                          'triggers': json.dumps(triggers),
+                         'filename': str(item._filename),
                          }
 
             # cast raw data to a string

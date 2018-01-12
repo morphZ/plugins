@@ -7,6 +7,7 @@
 	"Systemlogiken": "Logiques système",
 	"Nutzerlogiken": "Logiques utilisateur",
 	"Neue Logiken (nicht geladen)": "Nouvelles logiques (non encore chargées)",
+	"letzte Ausführung": "",
 	"nächste Ausführung": "Prochaine exécution",
 	"Cycle": "Cycle",
 	"Crontab": "Crontab",
@@ -34,10 +35,14 @@
 	"Letzte Änderung": "Dernière modification",
 	"Geändert durch": "Modifié par",
 	"age": "Âge",
+    "age": "age (modification)",
+	"update_age": "",
 	"aktueller": "actuel",
 	"vorheriger": "précédent",
 	"vorheriger Wert": "Valeur précédente",
+	"previous update": "",
 	"previous change": "Modification précédente",
+	"previous update age": "",
 	"previous age": "Âge précédent",
 	
 	"Evaluation und Trigger": "Configuration de l'initialisation, de l'évaluation et des déclencheurs",
@@ -197,10 +202,13 @@
 		"enforce_updates": "enforce_updates",
 		"eval": "eval",
 		"eval_trigger": "eval_trigger",
+		"on_update": "on_update",
+		"on_change": "on_change",
 		"cycle": "cycle",
 		"crontab": "crontab",
 		"autotimer": "autotimer",
-		"threshold": "threshold"
+		"threshold": "threshold",
+		"filename": ""
 	},
 	
 	"_threads": {
