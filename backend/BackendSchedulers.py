@@ -23,6 +23,7 @@
 #########################################################################
 
 import cherrypy
+import html
 
 class BackendSchedulers:
 
@@ -48,6 +49,7 @@ class BackendSchedulers:
                 schedule['next'] = s['next'].strftime('%Y-%m-%d %H:%M:%S%z')
                 schedule['cycle'] = s['cycle']
                 schedule['cron'] = s['cron']
+                schedule['cron'] = html.escape(str(s['cron']))
                 
                 if schedule['cycle'] == None:
                     schedule['cycle'] = ''
